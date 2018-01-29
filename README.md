@@ -10,3 +10,6 @@ Install and configure a basic cloud VM.
 
 ## install_mysql.sh
 Install and configure a mysql server.
+
+## with thanks to
+https://github.com/armankoradia/azure-Getting-Started-with-Terraform
