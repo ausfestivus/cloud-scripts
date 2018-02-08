@@ -43,8 +43,8 @@ EOL
 
 # create our symlink in /var/atlassian to /opt/var/atlassian
 # TODO
-mkdir -p /opt/var/atlassian
-ln -s /var/atlassian /opt/var/atlassian
+sudo mkdir -p /opt/var/atlassian
+sudo ln -s /var/atlassian /opt/var/atlassian
 
 # run it as root with the answer file
 sudo ./atlassian-jira-software-7.6.0-x64.bin -q -varfile response.varfile
