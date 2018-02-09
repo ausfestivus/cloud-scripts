@@ -26,10 +26,11 @@ fi
 cd ~ || exit
 
 # download the binary
-wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.6.0-x64.bin
+# wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.6.0-x64.bin
+wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.7.1-x64.bin
 
 # fix its perms
-chmod 755 ./atlassian-jira-software-7.6.0-x64.bin
+chmod 755 ./atlassian-jira-software-7.7.1-x64.bin
 
 # create our varfile contents for the install
 cat > ~/$RESPONSEFILE <<EOL
@@ -44,10 +45,11 @@ EOL
 # create our symlink in /var/atlassian to /opt/var/atlassian
 # TODO
 sudo mkdir -p /opt/var/atlassian
-sudo ln -s /var/atlassian /opt/var/atlassian
+# ln [OPTION]... [-T] TARGET LINK_NAME
+sudo ln -s /opt/var/atlassian /var/atlassian
 
 # run it as root with the answer file
-sudo ./atlassian-jira-software-7.6.0-x64.bin -q -varfile response.varfile
+sudo ./atlassian-jira-software-7.7.1-x64.bin -q -varfile response.varfile
 
 # drop our DB config into place
 # CLI to retrieve the connection string for a DB?
