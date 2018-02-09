@@ -54,8 +54,6 @@ sys.languageId=en
 sys.installationDir=/opt/atlassian/jira
 EOL
 
-
-
 # run it as root with the answer file
 sudo ./atlassian-jira-software-7.7.1-x64.bin -q -varfile response.varfile
 
