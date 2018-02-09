@@ -9,6 +9,7 @@ echo "Reading global variables...." >&2
 # local variables
 export RESPONSEFILE="response.varfile"
 export ATLASSIANROOT=/opt
+#export ATLASSIANVAR=$ATLASSIANROOT/var/atlassian
 
 # preflights
 # check that /opt is mounted/exists.
@@ -18,6 +19,17 @@ then
 else
   echo "$ATLASSIANROOT was found. Continuing."
 fi
+
+# check that /opt/var/atlassian exists.
+# if [ ! -e $ATLASSIANVAR ] # if /opt/var/atlassian doesnt exist
+# then
+#   echo "$ATLASSIANVAR was not found. Creating it."
+#   sudo mkdir -p $ATLASSIANVAR || exit # create our symlink in /var/atlassian to /opt/var/atlassian
+#   # ln [OPTION]... [-T] TARGET LINK_NAME
+#   sudo ln -s /opt/var/atlassian /var/atlassian || exit
+# else
+#   echo "$ATLASSIANVAR already exists. Continuing."
+# fi
 
 # check that our DB server is available
 # TODO
@@ -30,7 +42,7 @@ cd ~ || exit
 wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.7.1-x64.bin
 
 # fix its perms
-chmod 755 ./atlassian-jira-software-7.7.1-x64.bin
+sudo chmod 755 ./atlassian-jira-software-7.7.1-x64.bin
 
 # create our varfile contents for the install
 cat > ~/$RESPONSEFILE <<EOL
@@ -42,11 +54,7 @@ sys.languageId=en
 sys.installationDir=/opt/atlassian/jira
 EOL
 
-# create our symlink in /var/atlassian to /opt/var/atlassian
-# TODO
-sudo mkdir -p /opt/var/atlassian
-# ln [OPTION]... [-T] TARGET LINK_NAME
-sudo ln -s /opt/var/atlassian /var/atlassian
+
 
 # run it as root with the answer file
 sudo ./atlassian-jira-software-7.7.1-x64.bin -q -varfile response.varfile
