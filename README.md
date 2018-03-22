@@ -18,5 +18,6 @@ Install and configure a mysql server.
 A systemd start|stop script for JIRA
 
 ## with thanks to
-https://github.com/armankoradia/azure-Getting-Started-with-Terraform
-https://github.com/bparsons/atlassian-systemd (for the jira and confluence systemd scripts)
+- https://github.com/armankoradia/azure-Getting-Started-with-Terraform
+
+- https://github.com/bparsons/atlassian-systemd (for the jira and confluence systemd scripts)
