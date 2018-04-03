@@ -28,3 +28,4 @@ server {
   listen       80;
   server_name  jira.cloud00.bestfamily.id.au;
   root         /var/lib/jira;
+}
