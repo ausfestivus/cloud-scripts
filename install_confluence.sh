@@ -56,7 +56,7 @@ sys.installationDir=/opt/atlassian/confluence
 EOL
 
 # run it as root with the answer file
-sudo ./atlassian-confluence-6.7.0-x64.bin -q -varfile response.varfile
+sudo ./atlassian-confluence-6.8.0-x64.bin -q -varfile response.varfile
 
 # drop our DB config into place
 # CLI to retrieve the connection string for a DB?
