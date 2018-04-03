@@ -38,10 +38,12 @@ fi
 cd ~ || exit
 
 # download the binary
-wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.7.0-x64.bin
+#wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.7.0-x64.bin
+# 20180403 updated to 6.8.0
+wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.8.0-x64.bin
 
 # fix its perms
-sudo chmod 755 ./atlassian-confluence-6.7.0-x64.bin
+sudo chmod 755 ./atlassian-confluence-6.8.0-x64.bin
 
 # create our varfile contents for the install
 cat > ~/$RESPONSEFILE <<EOL

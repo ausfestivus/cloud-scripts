@@ -39,10 +39,12 @@ cd ~ || exit
 
 # download the binary
 # wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.6.0-x64.bin
-wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.7.1-x64.bin
+#wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.7.1-x64.bin
+# 20180403 updated to 7.8.1
+wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.8.1-x64.bin
 
 # fix its perms
-sudo chmod 755 ./atlassian-jira-software-7.7.1-x64.bin
+sudo chmod 755 ./atlassian-jira-software-7.8.1-x64.bin
 
 # create our varfile contents for the install
 cat > ~/$RESPONSEFILE <<EOL
@@ -55,7 +57,7 @@ sys.installationDir=/opt/atlassian/jira
 EOL
 
 # run it as root with the answer file
-sudo ./atlassian-jira-software-7.7.1-x64.bin -q -varfile response.varfile
+sudo ./atlassian-jira-software-7.8.1-x64.bin -q -varfile response.varfile
 
 # drop our DB config into place
 # CLI to retrieve the connection string for a DB?
