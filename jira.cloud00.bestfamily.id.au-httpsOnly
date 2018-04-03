@@ -1,0 +1,30 @@
+# Upstream JIRA server on port 8081. Use 127.0.0.1 and not localhost to force IPv4.
+upstream jira {
+  server       127.0.0.1:8081 fail_timeout=0;
+}
+
+# listen on HTTP2/SSL
+server {
+  listen       443 ssl http2;
+  server_name  jira.cloud00.bestfamily.id.au;
+
+  # ssl certs from letsencrypt
+  ssl_certificate /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/privkey.pem;
+
+  location / {
+    client_max_body_size 10M;
+    proxy_set_header  Host $host:$server_port;
+    proxy_set_header  X-Real-IP $remote_addr;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Forwarded-Proto $scheme;
+    # hand the request off to jira on non-ssl
+    proxy_pass        http://jira;
+  }
+}
+
+# redirect HTTP and handle let's encrypt requests
+server {
+  listen       80;
+  server_name  jira.cloud00.bestfamily.id.au;
+  root         /var/lib/jira;
