@@ -11,18 +11,20 @@
 
 # pseudo code
 # - stop JIRA
-# - zip up app dir
+# - zip up app dir (also includes the xml backups)
+# - prompt to start local JIRA server or not
 # - copy zip to destination server
-# - copy n xml backups to destination server
-# - prompt to start JIRA server or not
+
 
 # global VARs
 export JIRAAPPDIR="/var/atlassian/application-data/jira"
 export SOURCEJIRAPATH="/var/atlassian/application-data/jira/export"
 export JIRADESTUSER="ubuntu"
 export JIRADESTSERVER="diatapp00.westus2.cloudapp.azure.com"
+export JIRASTART=""
 export XMLDAYSTOCOPY=3
 export ZIPARCHIVENAME=`date "+%Y%m%d-%H%M%S"`
+
 
 # code
 #
@@ -32,8 +34,23 @@ cd ~ || exit
 # stop JIRA
 if [[ -x /opt/atlassian/jira/bin/stop-jira.sh ]] ;then
   sudo /opt/atlassian/jira/bin/stop-jira.sh
+  # are we going to start JIRA after weve grabbed our tar ball?
+  echo "Do you wish to start JIRA again after weve prep'd our tarball?"
+  select yn in "Yes" "No"; do
+    case $yn in
+      Yes ) JIRASTART=1 ; echo "JIRA will be started"; break ;;
+      No ) JIRASTART=0 ; echo "JIRA WONT be started. You will need to start it manually."; exit ;;
+    esac
+  done
   # zip up app dir
   sudo tar -cvzf ./jira-application-$ZIPARCHIVENAME.tar.gz $JIRAAPPDIR
+  # we have our tar ball now, lets start JIRA if we said we want to.
+  if [[ $JIRASTART ]] ; then
+    echo "restarting JIRA."
+    sudo /opt/atlassian/jira/bin/start-jira.sh
+  else
+    echo "JIRA not running."
+  fi
   # copy the home dir to the destination server.
   scp ./jira-application-$ZIPARCHIVENAME.tar.gz $JIRADESTUSER@$JIRADESTSERVER:~/
   # copy the latest n days of xml backups to the destination server.
