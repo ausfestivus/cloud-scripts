@@ -20,7 +20,7 @@
 export JIRAAPPDIR="/var/atlassian/application-data/jira"
 export SOURCEJIRAPATH="/var/atlassian/application-data/jira/export"
 export JIRADESTUSER="ubuntu"
-export JIRADESTSERVER="diatapp00.uswest2.cloudapp.azure.com"
+export JIRADESTSERVER="diatapp00.westus2.cloudapp.azure.com"
 export XMLDAYSTOCOPY=3
 export ZIPARCHIVENAME=`date "+%Y%m%d-%H%M%S"`
 
