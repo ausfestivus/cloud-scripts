@@ -49,7 +49,8 @@ if [[ -x /opt/atlassian/jira/bin/stop-jira.sh ]] ;then
     echo "JIRA not running."
   fi
   # copy the home dir to the destination server.
-  scp -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./jira-application-$ZIPARCHIVENAME.tar.gz $JIRADESTUSER@$JIRADESTSERVER:~/
+  echo "Copying tarball to $JIRADESTSERVER"
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./jira-application-$ZIPARCHIVENAME.tar.gz $JIRADESTUSER@$JIRADESTSERVER:~/
   rm -f ./jira-application-$ZIPARCHIVENAME.tar.gz
 else
   echo "/opt/atlassian/jira/bin/stop-jira.sh not found."

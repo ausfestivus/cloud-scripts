@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# A quick script which will gather the necessary data from a source CONFLUENCE
+# server and copy it to a new CONFLUENCE server.
+#
+# Requirements
+# - must be run as a user. NOT ROOT.
+# - you will need ssh keyed access to the destination CONFLUENCE server.
+# - you will need sufficient privileges locally to access the source data.
+# - you will need to put this script on the source CONFLUENCE server.
+
+# pseudo code
+# - stop CONFLUENCE
+# - tar up app dir (also includes the xml backups)
+# - prompt to start local CONFLUENCE server or not
+# - copy tar to destination server
+# - clean up local tarball
+
+# global VARs
+export CONFLUENCEAPPDIR="/var/atlassian/application-data/confluence"
+export CONFLUENCEDESTUSER="ubuntu"
+export CONFLUENCEDESTSERVER="diatapp01.westus2.cloudapp.azure.com"
+export CONFLUENCESTART=""
+export ZIPARCHIVENAME=`date "+%Y%m%d-%H%M%S"`
+
+# code
+#
+# be in your home dir
+cd ~ || exit
+
+# stop CONFLUENCE
+if [[ -x /opt/atlassian/confluence/bin/stop-confluence.sh ]] ;then
+  sudo /opt/atlassian/confluence/bin/stop-confluence.sh
+  # are we going to start CONFLUENCE after weve grabbed our tar ball?
+  echo "Do you wish to start CONFLUENCE again after weve prep'd our tarball?"
+  select yn in "Yes" "No"; do
+    case $yn in
+      Yes ) CONFLUENCESTART=1 ; echo "CONFLUENCE will be started"; break ;;
+      No ) CONFLUENCESTART=0 ; echo "CONFLUENCE WONT be started. You will need to start it manually."; exit ;;
+    esac
+  done
+  # zip up app dir
+  sudo tar -cvzf ./confluence-application-$ZIPARCHIVENAME.tar.gz $CONFLUENCEAPPDIR
+  # we have our tar ball now, lets start CONFLUENCE if we said we want to.
+  if [[ $CONFLUENCESTART ]] ; then
+    echo "restarting CONFLUENCE."
+    sudo /opt/atlassian/confluence/bin/start-confluence.sh
+  else
+    echo "CONFLUENCE not running."
+  fi
+  # copy the home dir to the destination server.
+  echo "Copying tarball to $CONFLUENCEDESTSERVER"
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./confluence-application-$ZIPARCHIVENAME.tar.gz $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
+  rm -f ./confluence-application-$ZIPARCHIVENAME.tar.gz
+else
+  echo "/opt/atlassian/confluence/bin/stop-confluence.sh not found."
+  exit 1
+fi
