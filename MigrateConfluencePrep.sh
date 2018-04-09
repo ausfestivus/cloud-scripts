@@ -34,8 +34,13 @@ cd ~ || exit
 ################################################################################
 # put our latest backup file name into a VAR
 LATESTCONFLUENCEBACKUPFILE=$(sudo find $CONFLUENCEBACKUPSDIR/ -type f -printf '%p\n' | sort | head -n 1)
+
 # scp latest backup file to destination.
 sudo scp -i ~$CONFLUENCEDESTUSER/.ssh/id_rsa $SSHOPTIONS $LATESTCONFLUENCEBACKUPFILE $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
+
+# check that are restore dir exists on the new target server
+ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo mkdir -p $CONFLUENCERESTOREDIR && sudo chown confluence:confluence $CONFLUENCERESTOREDIR
+
 # ssh to destination host and move backup file to correct location.
 ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo cp ./$LATESTCONFLUENCEBACKUPFILE $CONFLUENCERESTOREDIR
 #sudo cp `sudo find ./var/atlassian/application-data/confluence/backups/ -type f -printf '%p\n' | sort | head -n 1` $CONFLUENCERESTOREDIR
