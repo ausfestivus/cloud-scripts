@@ -42,7 +42,7 @@ sudo scp -i ~$CONFLUENCEDESTUSER/.ssh/id_rsa $SSHOPTIONS $LATESTCONFLUENCEBACKUP
 ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo mkdir -p $CONFLUENCERESTOREDIR && sudo chown confluence:confluence $CONFLUENCERESTOREDIR
 
 # ssh to destination host and move backup file to correct location.
-ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo cp ./$LATESTCONFLUENCEBACKUPFILE $CONFLUENCERESTOREDIR
+ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo cp .$LATESTCONFLUENCEBACKUPFILE $CONFLUENCERESTOREDIR
 #sudo cp `sudo find ./var/atlassian/application-data/confluence/backups/ -type f -printf '%p\n' | sort | head -n 1` $CONFLUENCERESTOREDIR
 #scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./confluence-application-$ZIPARCHIVENAME.tar.gz $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
 
