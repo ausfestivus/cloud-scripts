@@ -20,7 +20,7 @@ export CONFLUENCEDESTUSER="ubuntu"
 export CONFLUENCEDESTSERVER="diatapp01.westus2.cloudapp.azure.com"
 export CONFLUENCESTART=""
 #export ZIPARCHIVENAME=`date "+%Y%m%d-%H%M%S"`
-export SSHOPTIONS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+export SSHOPTIONS="-i ~$CONFLUENCEDESTUSER/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 # code
 #
@@ -34,15 +34,16 @@ cd ~ || exit
 ################################################################################
 # put our latest backup file name into a VAR
 LATESTCONFLUENCEBACKUPFILE=$(sudo find $CONFLUENCEBACKUPSDIR/ -type f -printf '%p\n' | sort | head -n 1)
+LATESTCONFLUENCEBACKUPFILENAME=$(basename -- "$LATESTCONFLUENCEBACKUPFILE")
 
 # scp latest backup file to destination.
-sudo scp -i ~$CONFLUENCEDESTUSER/.ssh/id_rsa $SSHOPTIONS $LATESTCONFLUENCEBACKUPFILE $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
+sudo scp $SSHOPTIONS $LATESTCONFLUENCEBACKUPFILE $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
 
 # check that are restore dir exists on the new target server
 ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo mkdir -p $CONFLUENCERESTOREDIR && sudo chown confluence:confluence $CONFLUENCERESTOREDIR
 
 # ssh to destination host and move backup file to correct location.
-ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo cp .$LATESTCONFLUENCEBACKUPFILE $CONFLUENCERESTOREDIR
+ssh $SSHOPTIONS $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER sudo cp ./$LATESTCONFLUENCEBACKUPFILENAME $CONFLUENCERESTOREDIR
 #sudo cp `sudo find ./var/atlassian/application-data/confluence/backups/ -type f -printf '%p\n' | sort | head -n 1` $CONFLUENCERESTOREDIR
 #scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./confluence-application-$ZIPARCHIVENAME.tar.gz $CONFLUENCEDESTUSER@$CONFLUENCEDESTSERVER:~/
 
