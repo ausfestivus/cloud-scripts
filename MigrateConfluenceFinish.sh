@@ -10,25 +10,46 @@
 
 # pseudo code
 # prompt for input tarball filename
-# extract the tarballs
 # move the backup data to the correct restore location
 
 # global VARs
 export CONFLUENCEAPPDIR="/var/atlassian/application-data/confluence"
 export CONFLUENCESTART=""
 export CONFLUENCETARBALL=""
+export CONFLUENCERESTOREDIR=$CONFLUENCEAPPDIR/restore/
 
 # code
 #
+# check that base confluence is installed
+if [[ ! -d $CONFLUENCEAPPDIR ]] ; then
+  echo "Couldnt find $CONFLUENCEAPPDIR. Exiting."
+  exit 1
+fi
+
 # input the name of the tarball we're working with.
 echo "Ensure that your source tarball is in the same location as this script."
 read -p "Enter the name of the source tarball file thats in the current directory." CONFLUENCETARBALL
-# check that the file exists.
+
+# check that the tarball file exists.
 if [[ ! -f $CONFLUENCETARBALL ]] ; then
   echo "Couldnt find $CONFLUENCETARBALL in the current directory. Exiting."
   exit 1
 fi
-# extract the tarball.
-tar zxvf ./$CONFLUENCETARBALL
-# copy our latest backup file into place
-sudo find ./var/atlassian/application-data/confluence/backups/ -mtime 1 -exec cp {} /var/atlassian/application-data/confluence \;
+
+# if our restore directory doesnt exist then create it and fix perms
+if [[ ! -d $CONFLUENCERESTOREDIR ]] ; then
+  sudo mkdir $CONFLUENCERESTOREDIR || exit 1
+  sudo chown confluence:confluence $CONFLUENCERESTOREDIR || exit 1
+  sudo chmod 755 confluence:confluence $CONFLUENCERESTOREDIR || exit 1
+fi
+
+# extract the tar tarball
+cd || exit 1
+tar -zxvf $CONFLUENCETARBALL
+
+# copy our latest backup file into the restore dir
+sudo cp `sudo find ./var/atlassian/application-data/confluence/backups/ -type f -printf '%p\n' | sort | head -n 1` $CONFLUENCERESTOREDIR
+
+# clean up
+# sudo rm -rf ./var
+# sudo rm -f $CONFLUENCETARBALL
