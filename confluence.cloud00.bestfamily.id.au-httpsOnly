@@ -1,6 +1,25 @@
 # Upstream Confluence server on port 8090. Use 127.0.0.1 and not localhost to force IPv4.
 
 # listen on HTTP2/SSL
+# server {
+#   listen       443 ssl http2;
+#   server_name  confluence.cloud00.bestfamily.id.au;
+#
+#   # ssl certs from letsencrypt
+#   ssl_certificate /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/fullchain.pem;
+#   ssl_certificate_key /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/privkey.pem;
+#
+#   location / {
+#     client_max_body_size 10M;
+#     proxy_set_header  Host $host:$server_port;
+#     proxy_set_header  X-Real-IP $remote_addr;
+#     proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+#     proxy_set_header  X-Forwarded-Proto $scheme;
+#     # hand the request off to confluence on non-ssl
+#     proxy_pass        http://192.168.254.5:8090;
+#   }
+# }
+
 server {
   listen       443 ssl http2;
   server_name  confluence.cloud00.bestfamily.id.au;
@@ -9,13 +28,29 @@ server {
   ssl_certificate /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/privkey.pem;
 
+  proxy_connect_timeout       300;
+  proxy_send_timeout          300;
+  proxy_read_timeout          300;
+  send_timeout                300;
+
+  location /synchrony {
+    set $backend "http://192.168.254.4:8091";
+    proxy_pass $backend;
+    proxy_redirect http://192.168.254.4:8091 $scheme://$host/;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+
   location / {
-    client_max_body_size 10M;
-    proxy_set_header  Host $host:$server_port;
-    proxy_set_header  X-Real-IP $remote_addr;
-    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header  X-Forwarded-Proto $scheme;
-    # hand the request off to confluence on non-ssl
-    proxy_pass        http://192.168.254.5:8090;
+    set $backend "http://192.168.254.4:8090";
+    proxy_pass $backend;
+    proxy_redirect http://192.168.254.4:8090 $scheme://$host/;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Server $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 }
