@@ -33,7 +33,8 @@ cd ~ || exit
 # ssh to destination host and move backup file to correct location.
 ################################################################################
 # put our latest backup file name into a VAR
-LATESTCONFLUENCEBACKUPFILE=$(sudo find $CONFLUENCEBACKUPSDIR/ -type f -printf '%p\n' | sort | head -n 1)
+#LATESTCONFLUENCEBACKUPFILE=$(sudo find $CONFLUENCEBACKUPSDIR/ -type f -printf '%p\n' | sort | head -n 1)
+LATESTCONFLUENCEBACKUPFILE=$(sudo find $CONFLUENCEBACKUPSDIR/ -ctime 1 -type f)
 LATESTCONFLUENCEBACKUPFILENAME=$(basename -- "$LATESTCONFLUENCEBACKUPFILE")
 
 # scp latest backup file to destination.
