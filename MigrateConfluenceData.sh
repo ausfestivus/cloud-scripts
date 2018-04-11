@@ -9,6 +9,11 @@
 #
 # This script MUST be run on the local server.
 #
+# Assumptions
+# - That the backup data file retrieved from the source server contains the data
+#   that is to be restored. If your Confluence server is busy this may not
+#   contain the most up to date data.
+#
 # Requirements
 # - must be run as a user. NOT ROOT.
 # - SSH access to the source server.
@@ -21,7 +26,7 @@
 # - test that Confluence is installed on the local server.
 
 # global VARs
-export SOURCESERVER=""
+export SOURCESERVER="diapapp02.australiasoutheast.cloudapp.azure.com"
 export CONFLUENCEAPPDIR="/var/atlassian/application-data/confluence"
 export CONFLUENCEBACKUPSDIR="$CONFLUENCEAPPDIR/backups"
 export CONFLUENCERESTOREDIR="$CONFLUENCEAPPDIR/restore"
@@ -31,9 +36,8 @@ export CONFLUENCERESTOREDIR=$CONFLUENCEAPPDIR/restore/
 export SSHOK=0 # by default we assume ssh isnt enabled.
 export SSHTIMEOUT=5 # number of seconds the ssh client will wait for a connection.
 export SSHUSER="ubuntu"
-export SSHOPTIONS="-i ~$SSHUSER/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=$SSHTIMEOUT -o BatchMode=yes"
-
-
+export SSHID="~$SSHUSER/.ssh/id_rsa"
+export SSHOPTIONS="-i $SSHID -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=$SSHTIMEOUT -o BatchMode=yes"
 
 #############################################################
 # code starts here
@@ -42,6 +46,12 @@ export SSHOPTIONS="-i ~$SSHUSER/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserK
 # check that we ARENT root.
 if [[ $EUID = 0 || $UID = 0 ]] ; then
   echo "Detected script being run as root. Dont do this. Exiting."
+  exit 1
+fi
+
+# test that we have a local SSH rsa_id.
+if [[ ! -f $SSHID ]] ; then
+  echo "No ssh id file found at $SSHID. Exiting."
   exit 1
 fi
 
