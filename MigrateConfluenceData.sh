@@ -50,7 +50,7 @@ if [[ $EUID = 0 || $UID = 0 ]] ; then
 fi
 
 # test that we have a local SSH rsa_id.
-if [[ ! -f $SSHID ]] ; then
+if [[ ! -e $SSHID ]] ; then
   echo "No ssh id file found at $SSHID. Exiting."
   exit 1
 fi
