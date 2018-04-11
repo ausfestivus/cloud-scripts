@@ -64,9 +64,12 @@ fi
 
 # if our restore directory doesnt exist then create it and fix perms
 if [[ ! -d $CONFLUENCERESTOREDIR ]] ; then
+  echo "Confluence restore destination path not found."
+  echo "Creating it."
   sudo mkdir $CONFLUENCERESTOREDIR || exit 1
   sudo chown confluence:confluence $CONFLUENCERESTOREDIR || exit 1
   sudo chmod 755 confluence:confluence $CONFLUENCERESTOREDIR || exit 1
+  echo "Creation complete."
 fi
 
 
