@@ -9,10 +9,13 @@
 #
 # This script MUST be run on the local server.
 #
-# Assumptions
-# - That the backup data file retrieved from the source server contains the data
-#   that is to be restored. If your JIRA server is busy this may not
-#   contain the most up to date data.
+## Assumptions
+# - Your new JIRA and Confluence servers are up and running per the rest of this repo.
+# - Your existing JIRA and Confluence servers are running the built in backups.
+# - your running JIRA and Confluence on Linux.
+# - you have keyed ssh access to the source and destination servers.
+# - your non-root user has the same username on all servers.
+# - The non-root user has sudo access on all the servers.
 #
 # Requirements
 # - must be run as a user. NOT ROOT.
@@ -34,14 +37,14 @@
 # - start JIRA.
 
 # global VARs
-export SOURCESERVER="diapapp01.australiasoutheast.cloudapp.azure.com"
+export SOURCESERVER="{FQDN of source JIRA server.}"
 export JIRAAPPDIR="/var/atlassian/application-data/jira"
 export JIRABACKUPSDIR="$JIRAAPPDIR/export"
 export JIRARESTOREDIR="$JIRAAPPDIR/import"
 export JIRASTART=""
 export SSHOK=0 # by default we assume ssh isnt enabled.
 export SSHTIMEOUT=5 # number of seconds the ssh client will wait for a connection.
-export SSHUSER="ubuntu"
+export SSHUSER="{local non-root user}"
 export SSHID="$HOME/.ssh/id_rsa"
 export SSHOPTIONS="-i $SSHID -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=$SSHTIMEOUT -o BatchMode=yes -q"
 export ZIPARCHIVENAME=$(date "+%Y%m%d-%H%M%S")
