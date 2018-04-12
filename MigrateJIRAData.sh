@@ -80,7 +80,7 @@ fi
 # Grab the full path and name of our most recent backup file on our source
 # server
 echo -n "Determining path and name of most recent backup file on source server..."
-LATESTJIRABACKUPFILE=$(ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo find $JIRABACKUPSDIR -ctime 1 -type f" 2>&1)
+LATESTJIRABACKUPFILE=$(ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo find $JIRABACKUPSDIR -ctime 1 -type f | sort | head -n 1" 2>&1)
 LATESTJIRABACKUPFILENAME=$(basename -- "$LATESTJIRABACKUPFILE")
 echo "Done."
 
@@ -101,7 +101,7 @@ sudo cp $HOME/$LATESTJIRABACKUPFILENAME $JIRARESTOREDIR/
 echo "Done."
 
 # clean ups
-echo -n "Commencing clean ups"
+echo -n "Commencing clean ups..."
 # clean up copy on source server
 ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo rm -f ~/$LATESTJIRABACKUPFILENAME"
 
