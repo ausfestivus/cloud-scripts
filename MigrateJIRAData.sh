@@ -115,54 +115,41 @@ tar zxvf $HOME/jira-application-$ZIPARCHIVENAME.tar.gz
 echo "Done."
 
 # - move the directory into place
+echo -n "Moving the original app dir to the correct location..."
 sudo mv $HOME/var/atlassian/application-data/jira $JIRAAPPDIR
+echo "Done."
 
 # - fix permissions
+echo -n "Fixing the permissions on the app dir..."
 sudo chown root:root /var/atlassian/
 sudo chown root:root /var/atlassian/application-data/
 sudo chown jira:root /var/atlassian/application-data/jira
 sudo chmod 700 /var/atlassian/application-data/jira
 sudo chown -R jira:jira $JIRAAPPDIR
+echo "Done."
 
 # - rename dbconfig.xml
+echo -n "Renaming existing dbconfig.xml to dbconfig-$ZIPARCHIVENAME.xml..."
 sudo mv $JIRAAPPDIR/dbconfig.xml $JIRAAPPDIR/dbconfig-$ZIPARCHIVENAME.xml
+echo "Done."
 
 # - start local JIRA on new server.
 echo -n "Starting local JIRA..."
 sudo systemctl start jira
 echo "Done."
 
-# - clean ups
+# - copy last backup in the tarball to the import directory
+echo -n "Getting latest backup file ready for import..."
+LATESTJIRABACKUPFILE=$(sudo find $JIRABACKUPSDIR -ctime 1 -type f)
+LATESTJIRABACKUPFILENAME=$(basename -- "$LATESTJIRABACKUPFILE")
+sudo cp $LATESTJIRABACKUPFILE $JIRARESTOREDIR
+echo "Done."
 
-# ORIGINAL CODE BELOW HERE
-# # Grab the full path and name of our most recent backup file on our source
-# # server
-# echo -n "Determining path and name of most recent backup file on source server..."
-# LATESTJIRABACKUPFILE=$(ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo find $JIRABACKUPSDIR -ctime 1 -type f | sort | head -n 1" 2>&1)
-# LATESTJIRABACKUPFILENAME=$(basename -- "$LATESTJIRABACKUPFILE")
-# echo "Done."
-#
-# # Now we need to copy the backup file on the source server to a location on the
-# # source server we can get to it with our scp.
-# echo -n "Copy backup file from JIRA backup dir to temporary location..."
-# ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo cp $LATESTJIRABACKUPFILE ~/$LATESTJIRABACKUPFILENAME"
-# echo "Done."
-#
-# # copy our latest backup file from the source server into a temporary local dir
-# echo -n "Copy backup file from temporary location on source server to temporary location here..."
-# scp $SSHOPTIONS $SSHUSER@$SOURCESERVER:~/$LATESTJIRABACKUPFILENAME $HOME/
-# echo "Done."
-#
-# # Now sudo copy the local temp copy to the restore dir
-# echo -n "Copy temporary local backup file to local JIRA restore directory..."
-# sudo cp $HOME/$LATESTJIRABACKUPFILENAME $JIRARESTOREDIR/
-# echo "Done."
-#
-# # clean ups
-# echo -n "Commencing clean ups..."
-# # clean up copy on source server
-# ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo rm -f ~/$LATESTJIRABACKUPFILENAME"
-#
-# # clean up local copy in $HOME
-# rm -f $HOME/$LATESTJIRABACKUPFILENAME
-# echo "Done."
+# - clean ups
+echo -n "Cleaning up some files..."
+rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz
+ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz $JIRAAPPDIR"
+echo "Done."
+echo " "
+echo "NOTE: When you are restoring the backup to your new empty JIRA instance you will be asked for the name of the backup file to restore from."
+echo "      The name you should enter is $LATESTJIRABACKUPFILENAME."
