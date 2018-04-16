@@ -151,7 +151,8 @@ echo "Done."
 # - clean ups
 echo -n "Cleaning up some files..."
 rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz
-ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz $JIRAAPPDIR"
+rm -f $HOME/var
+ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz"
 echo "Done."
 echo " "
 echo "NOTE: When you are restoring the backup to your new empty JIRA instance you will be asked for the name of the backup file to restore from."
