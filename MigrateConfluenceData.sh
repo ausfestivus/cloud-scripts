@@ -76,7 +76,7 @@ if sudo test ! -d $CONFLUENCERESTOREDIR ; then
   echo "Creating it."
   sudo mkdir $CONFLUENCERESTOREDIR || exit 1
   sudo chown confluence:confluence $CONFLUENCERESTOREDIR || exit 1
-  sudo chmod 755 confluence:confluence $CONFLUENCERESTOREDIR || exit 1
+  sudo chmod 755 $CONFLUENCERESTOREDIR || exit 1
   echo "Creation complete."
 fi
 
