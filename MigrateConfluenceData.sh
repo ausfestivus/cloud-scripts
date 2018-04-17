@@ -111,3 +111,6 @@ ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "sudo rm -f ~/$LATESTCONFLUENCEBACKUPF
 # clean up local copy in $HOME
 rm -f $HOME/$LATESTCONFLUENCEBACKUPFILENAME
 echo "Done."
+echo " "
+echo "NOTE: When you are restoring the backup to your new empty Confluence instance you will be asked for the name of the backup file to restore from."
+echo "      The name you should enter is $LATESTCONFLUENCEBACKUPFILENAME."
