@@ -113,13 +113,13 @@ sudo mv $JIRAAPPDIR/ $JIRAAPPDIR-$ZIPARCHIVENAME/
 echo "Done."
 
 # - extract JIRA tarball to correct local location
-echo -n "Extracting JIRA home dir tarball from source server..."
+echo -n "Extracting JIRA home dir tarball from source server to a local temp directory..."
 tar zxvf $HOME/jira-application-$ZIPARCHIVENAME.tar.gz
 echo "Done."
 
-# - move the directory into place
-echo -n "Moving the original app dir to the correct location..."
-sudo mv $HOME/var/atlassian/application-data/jira $JIRAAPPDIR
+# - move the extracted jira directory into the correct place
+echo -n "Moving the extracted JIRA dir to the correct local location..."
+sudo mv $HOME/var/atlassian/application-data/jira /var/atlassian/application-data/
 echo "Done."
 
 # - fix permissions
@@ -143,17 +143,16 @@ echo "Done."
 
 # - copy last backup in the tarball to the import directory
 echo -n "Getting latest backup file ready for import..."
-LATESTJIRABACKUPFILE=$(sudo find $JIRABACKUPSDIR -ctime 1 -type f)
-LATESTJIRABACKUPFILENAME=$(basename -- "$LATESTJIRABACKUPFILE")
-sudo cp $LATESTJIRABACKUPFILE $JIRARESTOREDIR
+LATESTJIRABACKUPFILE=$(sudo ls -Art $JIRABACKUPSDIR | tail -n 1)
+sudo cp $JIRABACKUPSDIR/$LATESTJIRABACKUPFILE $JIRARESTOREDIR/
 echo "Done."
 
 # - clean ups
 echo -n "Cleaning up some files..."
 rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz
-rm -f $HOME/var
+rm -rf "${HOME:?}/var"
 ssh -n $SSHOPTIONS $SSHUSER@$SOURCESERVER "rm -f $HOME/jira-application-$ZIPARCHIVENAME.tar.gz"
 echo "Done."
 echo " "
 echo "NOTE: When you are restoring the backup to your new empty JIRA instance you will be asked for the name of the backup file to restore from."
-echo "      The name you should enter is $LATESTJIRABACKUPFILENAME."
+echo "      The name you should enter is $LATESTJIRABACKUPFILE."
