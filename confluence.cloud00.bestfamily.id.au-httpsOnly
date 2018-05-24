@@ -34,3 +34,15 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 }
+
+# redirect HTTP and handle let's encrypt requests
+server {
+  listen       80;
+  server_name  confluence.cloud00.bestfamily.id.au;
+  root         /var/lib/jira;
+
+  # send everything else to HTTPS
+  location / {
+    return 302 https://confluence.cloud00.bestfamily.id.au;
+  }
+}
