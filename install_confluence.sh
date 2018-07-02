@@ -37,14 +37,6 @@ fi
 # be in the users homedir
 cd ~ || exit
 
-# download the binary
-#wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.7.0-x64.bin
-# 20180403 updated to 6.8.0
-wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.8.0-x64.bin
-
-# fix its perms
-sudo chmod 755 ./atlassian-confluence-6.8.0-x64.bin
-
 # create our varfile contents for the install
 cat > ~/$RESPONSEFILE <<EOL
 executeLauncherAction$Boolean=true
@@ -55,8 +47,19 @@ sys.languageId=en
 sys.installationDir=/opt/atlassian/confluence
 EOL
 
+# download the binary
+# Base URL for download can always be found under https://www.atlassian.com/software/confluence/download
+#wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.7.0-x64.bin
+# 20180403 updated to 6.8.0
+#wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.8.0-x64.bin
+# 20180701 updated to
+wget -q https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.10.0-x64.bin
+
+# fix its perms
+sudo chmod 755 ./atlassian-confluence-6.10.0-x64.bin
+
 # run it as root with the answer file
-sudo ./atlassian-confluence-6.8.0-x64.bin -q -varfile response.varfile
+sudo ./atlassian-confluence-6.10.0-x64.bin -q -varfile response.varfile
 
 # drop our DB config into place
 # CLI to retrieve the connection string for a DB?
