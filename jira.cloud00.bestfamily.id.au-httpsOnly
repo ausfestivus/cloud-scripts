@@ -12,6 +12,22 @@ server {
   ssl_certificate /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/privkey.pem;
 
+  # The following configs get us an A+ on SSL Labs
+  ssl on;
+  ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384";
+  ssl_protocols TLSv1.2;
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:50m;
+  ssl_session_timeout 5m;
+  ssl_stapling on;
+  ssl_stapling_verify on;
+
+  add_header Strict-Transport-Security "max-age=31536000";
+  add_header X-Frame-Options SAMEORIGIN;
+  add_header X-Content-Type-Options nosniff;
+  add_header X-XSS-Protection "1; mode=block";
+  resolver 8.8.8.8;
+
   proxy_connect_timeout       300;
   proxy_send_timeout          300;
   proxy_read_timeout          300;
