@@ -37,14 +37,14 @@
 # - start JIRA.
 
 # global VARs
-export SOURCESERVER="{FQDN of source JIRA server.}"
+export SOURCESERVER="{FQDN of source Jira server.}" #fqdn of source server goes here.
+export SSHUSER="{local non-root user}" # username that is used by the script for ssh. Must be the same on source and destination servers.
 export JIRAAPPDIR="/var/atlassian/application-data/jira"
 export JIRABACKUPSDIR="$JIRAAPPDIR/export"
 export JIRARESTOREDIR="$JIRAAPPDIR/import"
 export JIRASTART=""
 export SSHOK=0 # by default we assume ssh isnt enabled.
 export SSHTIMEOUT=5 # number of seconds the ssh client will wait for a connection.
-export SSHUSER="{local non-root user}"
 export SSHID="$HOME/.ssh/id_rsa"
 export SSHOPTIONS="-i $SSHID -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=$SSHTIMEOUT -o BatchMode=yes -q"
 export ZIPARCHIVENAME=$(date "+%Y%m%d-%H%M%S")
