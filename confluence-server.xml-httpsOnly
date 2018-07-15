@@ -10,7 +10,7 @@
                    debug="0"
                    URIEncoding="UTF-8"
                    protocol="org.apache.coyote.http11.Http11NioProtocol"
-                   proxyName="confluence.cloud00.bestfamily.id.au"
+                   proxyName="confluence-pp.diaxion.com"
                    proxyPort="443" scheme="https" />
 
         <Engine name="Standalone" defaultHost="localhost" debug="0">

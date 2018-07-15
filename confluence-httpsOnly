@@ -2,11 +2,11 @@
 
 server {
   listen       443 ssl http2;
-  server_name  confluence.cloud00.bestfamily.id.au;
+  server_name  confluence-pp.diaxion.com;
 
   # ssl certs from letsencrypt
-  ssl_certificate /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/jira.cloud00.bestfamily.id.au/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/jira-pp.diaxion.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/jira-pp.diaxion.com/privkey.pem;
 
   # The following configs get us an A+ on SSL Labs
   ssl on;
@@ -54,11 +54,11 @@ server {
 # redirect HTTP and handle let's encrypt requests
 server {
   listen       80;
-  server_name  confluence.cloud00.bestfamily.id.au;
+  server_name  confluence-pp.diaxion.com;
   root         /var/lib/jira;
 
   # send everything else to HTTPS
   location / {
-    return 302 https://confluence.cloud00.bestfamily.id.au;
+    return 302 https://confluence-pp.diaxion.com;
   }
 }
