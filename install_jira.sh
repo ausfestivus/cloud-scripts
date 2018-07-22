@@ -54,7 +54,7 @@ EOL
 # 20180403 updated to 7.8.1
 #wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.8.1-x64.bin
 # 20180701 updated to 7.10.2
-wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.10.2-x64.bin
+#wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.10.2-x64.bin
 # 20180715 updated to 7.11.0
 wget -q https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.11.0-x64.bin
 
