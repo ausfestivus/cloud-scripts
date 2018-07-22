@@ -6,11 +6,11 @@ upstream jira {
 # listen on HTTP2/SSL
 server {
   listen       443 ssl http2;
-  server_name  jira-pp.diaxion.com;
+  server_name  jira.diaxion.com;
 
   # ssl certs from letsencrypt
-  ssl_certificate /etc/letsencrypt/live/jira-pp.diaxion.com/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/jira-pp.diaxion.com/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/jira.diaxion.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/jira.diaxion.com/privkey.pem;
 
   # The following configs get us an A+ on SSL Labs
   ssl on;
@@ -47,11 +47,11 @@ server {
 # redirect HTTP and handle let's encrypt requests
 server {
   listen       80;
-  server_name  jira-pp.diaxion.com;
+  server_name  jira.diaxion.com;
   root         /var/lib/jira;
 
   # send everything else to HTTPS
   location / {
-    return 302 https://jira-pp.diaxion.com;
+    return 302 https://jira.diaxion.com;
   }
 }
